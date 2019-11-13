@@ -42,71 +42,43 @@ namespace AnimalShelter.Controllers
             {
                 animalList = animalList.ToLower();
                 string[] array = animalList.Split(",");
-
-                List<string> animalsTable = _db.animals.Select(w => w.Name).ToList();
-                foreach (String animal in array)
-                {
-                    if (!(animalsTable.Contains(animal)))
-                    {
-                        Random r = new Random();
-                        double randomNumber = r.Next(1,8);
-                        Animal newAnimal = new Animal{Name= wo, Rating= randomNumber, RatingCount= 0};
-                        _db.Add(newAnimal);
-                        _db.SaveChanges();
-                    }
-                }
+                List<string> animalsTable = _db.Animals.Select(w => w.Name).ToList();
+ 
                 query = query.Where(w => array.Contains(w.Name));
             }
-            // if (page != 0)
-            // {
-            //     int animalS_PER_PAGE = 30;
-            //     int NUMBER_OF_animalS = _db.animals.ToList().Count;
-            //     int MAX_PAGE = (int)Math.Ceiling((double)NUMBER_OF_animalS / (double)animalS_PER_PAGE);
-            //     if (page <= MAX_PAGE)
-            //     {
-            //         int MIN_RANGE = ((page - 1) * animalS_PER_PAGE) + 1;
-            //         int RANGE = animalS_PER_PAGE - 1;
-            //         if (MIN_RANGE + RANGE > NUMBER_OF_animalS && MIN_RANGE < NUMBER_OF_animalS)
-            //         {
-            //             RANGE = (NUMBER_OF_animalS - MIN_RANGE) + 1;
-            //         }
-            //         int[] RANGE_ARRAY = Enumerable.Range(MIN_RANGE, RANGE).ToArray();
-            //         query = query.Where(w => RANGE_ARRAY.Contains(w.animalId));
-            //     }
-            // }
             return query.ToList();
         }
 
         [HttpPost]
-        public void Post([FromBody] animal animal)
+        public void Post([FromBody] Animal animal)
         {
 
             Console.WriteLine("Post");
-            List<string> animals = _db.animals.Select(w => w.Name).ToList();
+            List<string> animals = _db.Animals.Select(w => w.Name).ToList();
             if (animals.Contains(animal.Name))
             {
-                int animalId = _db.animals.FirstOrDefault(w => w.Name == animal.Name).animalId;
-                animal.animalId = animalId;
+                int animalId = _db.Animals.FirstOrDefault(w => w.Name == animal.Name).AnimalId;
+                animal.AnimalId = animalId;
                 _db.Entry(animal).State = EntityState.Modified;
                 _db.SaveChanges();
             }
             else
             {
-                _db.animals.Add(animal);
+                _db.Animals.Add(animal);
                 _db.SaveChanges();
             }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<animal> Get(int id)
+        public ActionResult<Animal> Get(int id)
         {
-            return _db.animals.FirstOrDefault(entry => entry.animalId == id);
+            return _db.Animals.FirstOrDefault(entry => entry.AnimalId == id);
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] animal animal)
+        public void Put(int id, [FromBody] Animal animal)
         {
-            animal.animalId = id;
+            animal.AnimalId = id;
             _db.Entry(animal).State = EntityState.Modified;
             _db.SaveChanges();
         }
@@ -114,8 +86,8 @@ namespace AnimalShelter.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            var animalToDelete = _db.animals.FirstOrDefault(entry => entry.animalId == id);
-            _db.animals.Remove(animalToDelete);
+            var animalToDelete = _db.Animals.FirstOrDefault(entry => entry.AnimalId == id);
+            _db.Animals.Remove(animalToDelete);
             _db.SaveChanges();
         }
 
