@@ -10,14 +10,24 @@ namespace AnimalShelterClient.Models {
         public string name { get; set; }
         public int age { get; set; }
 
-        public static List<Animal> GetAnimals () {
-            var apiCallTask = ApiHelper.ApiCall ();
+        public static List<Animal> GetAnimals()
+        {
+            var apiCallTask = ApiHelper.ApiCall();
             var result = apiCallTask.Result;
 
-            JArray jsonResponse = JsonConvert.DeserializeObject<JArray> (result);
+            JArray jsonResponse = JsonConvert.DeserializeObject<JArray>(result);
             List<Animal> animalList = JsonConvert.DeserializeObject<List<Animal>>(jsonResponse.ToString());
+
             return animalList;
         }
+        // public static List<Animal> GetAnimals () {
+        //     var apiCallTask = ApiHelper.ApiCall ();
+        //     var result = apiCallTask.Result;
+
+        //     JArray jsonResponse = JsonConvert.DeserializeObject<JArray> (result);
+        //     List<Animal> animalList = JsonConvert.DeserializeObject<List<Animal>>(jsonResponse.ToString());
+        //     return animalList;
+        // }
 
         public static Animal PutAnimal(Animal animal)
         {
